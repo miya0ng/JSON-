@@ -1,11 +1,12 @@
 using Newtonsoft.Json;
+using NUnit.Framework;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using NUnit.Framework;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
-using TMPro;
+using static UnityEngine.GraphicsBuffer;
 
 [System.Serializable]
 public class RecordData
@@ -28,6 +29,7 @@ public class JsonTest3 : MonoBehaviour
     public GameObject cube;
     private bool isRecord = false;
     private bool isPlaying = false;
+    public float moveSpeed = 5f;
 
     public void Update()
     {
@@ -35,6 +37,12 @@ public class JsonTest3 : MonoBehaviour
         {
             StartCoroutine(Record());
         }
+
+        float h = Input.GetAxisRaw("Horizontal");
+        float v = Input.GetAxisRaw("Vertical");
+
+        cube.transform.position += new Vector3(h, v, 0) * moveSpeed * Time.deltaTime;
+
     }
 
     public void RecordButton()
