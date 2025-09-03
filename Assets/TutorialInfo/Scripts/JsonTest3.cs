@@ -24,11 +24,12 @@ public class JsonTest3 : MonoBehaviour
     public static readonly string SaveFileName = "cube.json";
     public static string SaveFilePath => Path.Combine(Application.persistentDataPath, SaveFileName);
 
-    public List<string> jsonObjectDatas = new List<string>();
+    //public List<string> jsonObjectDatas = new List<string>();
 
     public GameObject cube;
     private bool isRecord = false;
     private bool isPlaying = false;
+    private bool isPause = false;
     public float moveSpeed = 5f;
 
     public void Update()
@@ -37,6 +38,10 @@ public class JsonTest3 : MonoBehaviour
         {
             StartCoroutine(Record());
         }
+        //if (isPause)
+        //{
+        //    Time.timeScale = 0;
+        //}
 
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
@@ -47,18 +52,20 @@ public class JsonTest3 : MonoBehaviour
 
     public void RecordButton()
     {
-        isRecord = !isRecord;
+        isRecord = true;
         if (isRecord)
         {
+            isRecord = false;
             recordButton.GetComponentInChildren<TextMeshProUGUI>().text = "Stop Record";
         }
         else
         {
+            
             recordButton.GetComponentInChildren<TextMeshProUGUI>().text = "Start Record";
             File.WriteAllText(SaveFilePath, JsonConvert.SerializeObject(recordDataList, Formatting.Indented, new Vector3Converter()));
-            if (jsonObjectDatas.Count > 0)
+            if (recordDataList.Count > 0)
             {
-                jsonObjectDatas.Clear();
+                recordDataList.Clear();
             }
         }
     }
@@ -71,7 +78,6 @@ public class JsonTest3 : MonoBehaviour
         // objdata.rotation = obj.transform.rotation;
         recordDataList.Add(currentRecord);
         Debug.Log($"Saving to: {SaveFilePath}");
-
 
         yield return new WaitForSeconds(0.002f);
     }
@@ -105,8 +111,9 @@ public class JsonTest3 : MonoBehaviour
         }
         else
         {
+            Time.timeScale = 1;
             playButton.GetComponentInChildren<TextMeshProUGUI>().text = "Start Play";
-            
+            //isPause = true;
         }
     }
 }
